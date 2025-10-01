@@ -1,0 +1,2 @@
+# Jupyter notebooks
+Notebooks are organized by the dataset they analyze, and named after the figure (either `main` for main figures and `ed` for extended data) where the experiment that generated the dataset is introduced.

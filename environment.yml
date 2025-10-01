@@ -5,14 +5,14 @@ channels:
 
 dependencies:
   - python=3.10.6
-  - numpy=1.22.4
-  - scipy=1.9.1
   - matplotlib=3.6.0
-  - scikit-learn=1.1.2
-  - colorcet=3.0.1
-  - ipykernel
-  - tqdm
   - pip
   - pip:
+    - numpy==1.22.4
+    - scipy==1.9.1
+    - scikit-learn==1.1.2
+    - ipykernel==6.16.0
     - bouter==0.2.0
     - flammkuchen==1.0.2
+    - colorcet
+    - tqdm

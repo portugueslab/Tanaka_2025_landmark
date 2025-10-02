@@ -403,7 +403,7 @@ def scatter_bar(data, ax=[], color=cm.viridis, condnames=[], connect=False, **kw
                     else:
                         _, pval[i, j] = wilcoxon(data[i], data[j])
     np.set_printoptions(precision=3)
-    print(pval)
+    return pval
         
 def toggle_spines(ax, top, bottom, right, left):
     
@@ -462,7 +462,9 @@ def color_getter(ind):
         (0.9, 0.7, 0.2), # 5 pre yellow 
         (0.8, 0.3, 0.6), # 6 learning pink
         (0.4, 0.7, 0.7), # 7 post green
-        (0.6, 0.2, 0.65) # 8 treatment group purple
+        (0.6, 0.2, 0.65), # 8 treatment group purple
+        (0.6, 0.2, 0.6),  # bottom purple
+        (0.4, 0.8, 0.4)   # top green
     )
     colors = np.vstack(colors)
     return colors[ind, :]

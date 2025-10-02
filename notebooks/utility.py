@@ -417,18 +417,6 @@ def toggle_spines(ax, top, bottom, right, left):
     if not left:
         ax.set_yticks([])
     return 0
-        
-
-def remove_HPD_nosie(traces, noise_thresh=1000):
-    
-    d_traces = np.diff(traces, axis=1)
-    noise_frame = (d_traces[:, :-1]>noise_thresh) * (d_traces[:, 1:]< -noise_thresh) 
-    denoised = np.copy(traces)
-    for i in tqdm(range(traces.shape[0])):
-        for j in np.where(noise_frame[0, :])[0]:
-            denoised[i, j+1] = (traces[i, j] + traces[i, j+2]) / 2
-    
-    return denoised
 
 def split_time(t, t_start, duration, is_train=True):
     """
@@ -468,61 +456,3 @@ def color_getter(ind):
     )
     colors = np.vstack(colors)
     return colors[ind, :]
-
-def generate_sun_and_bars(wallpaper_shape, sun_elevation, sun_radius, bar_width, cylinder_gaze_angle=60):
-    """
-    Taken from E0084_v04
-    """
-    azimuth_mat, height_mat = np.meshgrid(np.arange(wallpaper_shape[1]), np.linspace(-1, 1, wallpaper_shape[0]))
-    # convert azimuthal index to degrees, and center at 0
-    azimuth_mat = azimuth_mat / wallpaper_shape[1] * 360 - 180
-    # inverse transform height on the cylinder wall to gaze angle
-    elevation_mat = np.arctan(height_mat * np.tan(cylinder_gaze_angle / 180 * np.pi)) / np.pi * 180
-    # draw sun and bar
-    sun_distance_mat = np.sqrt(azimuth_mat ** 2 + (elevation_mat - sun_elevation) ** 2)
-    sun_gradient_mat = (sun_radius - sun_distance_mat) / sun_radius
-    sun_gradient_mat = sun_gradient_mat * (sun_gradient_mat > 0)
-    left_bar_mask = (azimuth_mat > -90 - bar_width * 0.5) * (azimuth_mat < -90 + bar_width * 0.5)
-    right_bar_mask = (azimuth_mat > 90 - bar_width * 1.5) * (azimuth_mat < 90 + bar_width * 1.5) * \
-                     ((azimuth_mat < 90 - bar_width * 0.5) + (azimuth_mat > 90 + bar_width * 0.5))
-    bar_mask = left_bar_mask + right_bar_mask
-    scene_mat = (sun_gradient_mat * (~bar_mask))
-    return scene_mat
-
-def generate_stonehenge(wallpaper_shape, cylinder_gaze_angle=60):
-    azimuth_mat, height_mat = np.meshgrid(np.arange(wallpaper_shape[1]), np.linspace(-1, 1, wallpaper_shape[0]))
-    # convert azimuthal index to degrees, and center at 0
-    azimuth_mat = azimuth_mat / wallpaper_shape[1] * 360 - 180
-    # inverse transform height on the cylinder wall to gaze angle
-    elevation_mat = np.arctan(height_mat * np.tan(cylinder_gaze_angle / 180 * np.pi)) / np.pi * 180
-
-    # draw bars
-    bar_mask1 = (azimuth_mat > -127.5) * (azimuth_mat < -112.5)
-    bar_mask2 = (azimuth_mat > -97.5) * (azimuth_mat < -82.5)
-    bar_mask3 = (azimuth_mat > -7.5) * (azimuth_mat < 7.5)
-    bar_mask4 = (azimuth_mat > 127.5) * (azimuth_mat < 142.5) * ((elevation_mat % 20) < 10)
-
-    # combine them (boolean addition)
-    temp = (bar_mask1 + bar_mask2 + bar_mask3 + bar_mask4).astype(float)
-
-    return temp
-
-def generate_noise(wallpaper_shape, smoothing_size=5):
-    np.random.seed(seed=1)
-    noise_mat = 1 - 2*np.random.rand(wallpaper_shape[0], wallpaper_shape[1])
-    noise_mat = convolve2d(noise_mat, np.ones((smoothing_size, smoothing_size))/smoothing_size**2, mode='same')
-    noise_mat = (noise_mat > 0).astype(float)
-    return noise_mat
-
-def generate_suns(wallpaper_shape, radius=60, elevation=35, mirror=False, cylinder_gaze_angle=60):
-    azimuth_mat, height_mat = np.meshgrid(np.arange(wallpaper_shape[1]), np.linspace(-1, 1, wallpaper_shape[0]))
-    # convert azimuthal index to degrees, and center at 0
-    azimuth_mat = azimuth_mat / wallpaper_shape[1] * 360 - 180
-    # inverse transform height on the cylinder wall to gaze angle
-    elevation_mat = np.arctan(height_mat * np.tan(cylinder_gaze_angle / 180 * np.pi)) / np.pi * 180
-    R = np.sqrt((azimuth_mat+90)**2 + (elevation_mat+35)**2)
-    R = (radius - R) / radius # peak is 1
-    sun_mat = R * (R>0) # cut off at 0 and scale
-    if mirror:
-        sun_mat[:,wallpaper_shape[1]//2:] = np.fliplr(sun_mat[:,:wallpaper_shape[1]//2])
-    return sun_mat

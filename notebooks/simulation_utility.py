@@ -293,8 +293,3 @@ def bout_generator(duration, dt, tau, frequency, mu, sigma, tau_sign, fix_seed=F
         bias *= np.exp(-dt/tau_sign)
     return np.asarray(omega)
 
-def polar_wrap(x):
-    """
-    Because polar plot does not automatically close the circle...
-    """
-    return np.hstack((x, x[0]))

@@ -456,3 +456,9 @@ def color_getter(ind):
     )
     colors = np.vstack(colors)
     return colors[ind, :]
+    
+def polar_wrap(x):
+    """
+    Because polar plot does not automatically close the circle...
+    """
+    return np.hstack((x, x[0]))

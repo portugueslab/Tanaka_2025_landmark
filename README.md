@@ -3,9 +3,12 @@ This repository hosts scripts (jupyter notebooks) to analyze data for our manusc
 
 ## Data
 Preprocessed data to be analyzed by the scripts here are deposited on [Zenodo](https://doi.org/10.5281/zenodo.17233579).
+Please download the data from Zenodo, and place the unzipped data folders under the `data` directory.
 
 ## Requirements
-Please install the packages required to run the scripts from the provided environment file by running `conda env create -f environment.yml`.
+The scripts are written in python 3.10 within the framework of jupyter notebooks.
+The packages required to run the scripts are listed in `environment.yml`.
+If you are using anaconda as the package manager, you can create a new conda environment with necessary packages by running `conda env create -f environment.yml`.
 Activate the installed conda environment and register it as a kernel for jupyter by running `python -m ipykernel install --user --name=landmark`.
 
 ## Outputs
